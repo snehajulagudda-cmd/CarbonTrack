@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CarbonTrack Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f7f2;
+            color: #26382c;
+        }
+
+        header {
+            background: linear-gradient(135deg, #146c43, #198754);
+            color: white;
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        header h1 {
+            font-size: 30px;
+        }
+
+        header p {
+            margin-top: 8px;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #198754;
+            padding: 11px 20px;
+            border: none;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #e5f5e9;
+        }
+
+        nav {
+            background: white;
+            padding: 16px 5%;
+            box-shadow: 0 2px 8px #ddd;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #198754;
+            margin-right: 25px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #146c43;
+        }
+
+        .main {
+            padding: 30px 5%;
+            max-width: 1250px;
+            margin: auto;
+        }
+
+        .welcome {
+            background: linear-gradient(135deg, #d4fc79, #96e6a1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .welcome p {
+            line-height: 1.6;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0000000d;
+            border-left: 5px solid #198754;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card h3 {
+            color: #526457;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .number {
+            color: #198754;
+            font-size: 30px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+            box-shadow: 0 3px 12px #0000000d;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            color: #198754;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid #96e6a1;
+            border-color: #198754;
+        }
+
+        .primary-btn {
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .primary-btn:hover {
+            background: #146c43;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e5f5e9;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.7;
+        }
+
+        .tips p {
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        th {
+            background: #198754;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f5faf6;
+        }
+
+        #recordsMessage {
+            margin-top: 15px;
+            color: #526457;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #526457;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 22px;
+            }
+
+            header h1 {
+                font-size: 25px;
+            }
+
+            .main {
+                padding: 18px;
+            }
+
+            nav {
+                padding: 15px 20px;
+            }
+
+            nav a {
+                display: inline-block;
+                margin: 6px 12px 6px 0;
+            }
+
+            .welcome h2 {
+                font-size: 23px;
+            }
+
+            .number {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <h1>🌱 CarbonTrack</h1>
+            <p>Your Personal Carbon Footprint Tracker</p>
+        </div>
+
+        <button type="button" class="logout-btn" id="logoutBtn">
+            Logout ↗
+        </button>
+    </header>
+
+    <nav>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#calculator">Calculator</a>
+        <a href="#records">My Records</a>
+        <a href="#tips">Eco Tips</a>
+    </nav>
+
+    <main class="main">
+
+        <!-- Welcome Section -->
+        <section class="welcome" id="dashboard">
+            <h2>Welcome, <span id="userName">User</span>! 🌍</h2>
+            <p>
+                Track your carbon footprint and take small steps
+                towards a greener future.
+            </p>
+        </section>
+
+        <!-- Dashboard Cards -->
+        <section class="cards">
+
+            <div class="card">
+                <h3>🚗 Travel Distance</h3>
+                <p class="number" id="travelTotal">0 km</p>
+                <p>Total distance in your latest calculation</p>
+            </div>
+
+            <div class="card">
+                <h3>⚡ Electricity Usage</h3>
+                <p class="number" id="electricityTotal">0 kWh</p>
+                <p>Electricity in your latest calculation</p>
+            </div>
+
+            <div class="card">
+                <h3>🌿 Estimated CO₂</h3>
+                <p class="number" id="co2Total">0 kg</p>
+                <p>Estimated emissions in your latest calculation</p>
+            </div>
+
+        </section>
+
+        <!-- Carbon Calculator -->
+        <section class="section" id="calculator">
+
+            <h2>📊 Carbon Footprint Calculator</h2>
+
+            <p style="margin-bottom: 20px;">
+                Enter your travel distance and electricity consumption.
+            </p>
+
+            <form id="carbonForm">
+
+                <div class="form-group">
+                    <label for="distance">Travel Distance (km)</label>
+                    <input
+                        type="number"
+                        id="distance"
+                        min="0"
+                        step="any"
+                        placeholder="Example: 20"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="vehicle">Vehicle Type</label>
+
+                    <select id="vehicle">
+                        <option value="0.12">Car (estimated)</option>
+                        <option value="0.04">Motorcycle (estimated)</option>
+                        <option value="0.00">Walking / Cycling</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="electricity">Electricity Used (kWh)</label>
+                    <input
+                        type="number"
+                        id="electricity"
+                        min="0"
+                        step="any"
+                        placeholder="Example: 10"
+                        required>
+                </div>
+
+                <button type="submit" class="primary-btn">
+                    Calculate My Footprint
+                </button>
+
+            </form>
+
+            <div id="result" role="status" aria-live="polite"></div>
+
+        </section>
+
+        <!-- Saved Records -->
+        <section class="section" id="records">
+
+            <h2>📋 Saved Carbon Records</h2>
+
+            <div class="table-wrapper" id="savedRecords">
+                <p>Loading records...</p>
+            </div>
+
+            <p id="recordsMessage" role="status"></p>
+
+        </section>
+
+        <!-- Eco Tips -->
+        <section class="section tips" id="tips">
+
+            <h2>🌍 Eco-Friendly Tips</h2>
+
+            <p>🚲 Choose walking, cycling, or public transport when possible.</p>
+            <p>💡 Switch off lights and appliances when not in use.</p>
+            <p>🌳 Plant trees and protect green spaces.</p>
+            <p>♻️ Reduce waste and reuse materials whenever possible.</p>
+            <p>🔌 Use energy-efficient appliances to reduce electricity usage.</p>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>🌱 CarbonTrack | Take Small Steps for a Greener Planet</p>
+    </footer>
+
+    <script>
+        /*
+         * IMPORTANT:
+         * This is only a frontend check using sessionStorage.
+         * It is NOT a replacement for server-side authentication.
+         */
+
+        const storedUser = sessionStorage.getItem("carbonUser");
+
+        if (!storedUser) {
+            window.location.replace("/login");
+        }
+
+        let currentUser = null;
+
+        try {
+            currentUser = storedUser ? JSON.parse(storedUser) : null;
+        } catch (error) {
+            sessionStorage.removeItem("carbonUser");
+            window.location.replace("/login");
+        }
+
+        if (currentUser && currentUser.name) {
+            document.getElementById("userName").textContent =
+                currentUser.name;
+        }
+
+        // Logout
+        document.getElementById("logoutBtn").addEventListener("click", function() {
+            sessionStorage.removeItem("carbonUser");
+            window.location.replace("/login");
+        });
+
+        // Carbon Calculator
+        document.getElementById("carbonForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+                const distance = Number(
+                    document.getElementById("distance").value
+                );
+
+                const vehicleSelect = document.getElementById("vehicle");
+
+                const vehicleFactor = Number(vehicleSelect.value);
+
+                const vehicleType =
+                    vehicleSelect.options[vehicleSelect.selectedIndex].text;
+
+                const electricity = Number(
+                    document.getElementById("electricity").value
+                );
+
+                if (
+                    !Number.isFinite(distance) ||
+                    !Number.isFinite(electricity) ||
+                    distance < 0 ||
+                    electricity < 0
+                ) {
+                    alert("Please enter valid non-negative values.");
+                    return;
+                }
+
+                const travelCO2 = distance * vehicleFactor;
+                const electricityCO2 = electricity * 0.7;
+                const totalCO2 = travelCO2 + electricityCO2;
+
+                const result = document.getElementById("result");
+
+                result.style.display = "block";
+                result.textContent = "Saving your carbon record...";
+
+                try {
+                    const response = await fetch("/api/carbon", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            distance: distance,
+                            vehicleType: vehicleType,
+                            electricity: electricity,
+                            totalEmissions: totalCO2
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Could not save the record.");
+                    }
+
+                    const savedRecord = await response.json();
+
+                    document.getElementById("travelTotal").textContent =
+                        distance.toFixed(1) + " km";
+
+                    document.getElementById("electricityTotal").textContent =
+                        electricity.toFixed(1) + " kWh";
+
+                    document.getElementById("co2Total").textContent =
+                        totalCO2.toFixed(2) + " kg";
+
+                    result.replaceChildren();
+
+                    const heading = document.createElement("h3");
+                    heading.textContent = "Calculation Result";
+
+                    const travel = document.createElement("p");
+                    travel.textContent =
+                        "Travel emissions: " + travelCO2.toFixed(2) + " kg CO₂";
+
+                    const power = document.createElement("p");
+                    power.textContent =
+                        "Electricity emissions: " +
+                        electricityCO2.toFixed(2) + " kg CO₂";
+
+                    const total = document.createElement("p");
+                    const strong = document.createElement("strong");
+
+                    strong.textContent =
+                        "Total estimated emissions: " +
+                        totalCO2.toFixed(2) + " kg CO₂";
+
+                    total.appendChild(strong);
+
+                    const saved = document.createElement("p");
+                    saved.textContent =
+                        "Record saved successfully! ID: " + savedRecord.id;
+
+                    result.append(heading, travel, power, total, saved);
+
+                    await loadCarbonRecords();
+
+                } catch (error) {
+                    result.textContent =
+                        "Error saving record. Please check whether the backend is running.";
+
+                    console.error(error);
+                }
+            });
+
+        // Load Saved Records
+        async function loadCarbonRecords() {
+            const container = document.getElementById("savedRecords");
+            const recordsMessage = document.getElementById("recordsMessage");
+
+            try {
+                const response = await fetch("/api/carbon");
+
+                if (!response.ok) {
+                    throw new Error("Failed to load records.");
+                }
+
+                const records = await response.json();
+
+                container.replaceChildren();
+
+                if (!Array.isArray(records) || records.length === 0) {
+                    const emptyMessage = document.createElement("p");
+                    emptyMessage.textContent = "No carbon records saved yet.";
+                    container.appendChild(emptyMessage);
+                    return;
+                }
+
+                const table = document.createElement("table");
+
+                const headers = [
+                    "ID",
+                    "Distance (km)",
+                    "Vehicle",
+                    "Electricity (kWh)",
+                    "CO₂ (kg)"
+                ];
+
+                const thead = document.createElement("thead");
+                const headerRow = document.createElement("tr");
+
+                headers.forEach(function(headerText) {
+                    const th = document.createElement("th");
+                    th.textContent = headerText;
+                    headerRow.appendChild(th);
+                });
+
+                thead.appendChild(headerRow);
+
+                const tbody = document.createElement("tbody");
+
+                records.forEach(function(record) {
+                    const row = document.createElement("tr");
+
+                    [
+                        record.id,
+                        record.distance,
+                        record.vehicleType,
+                        record.electricity,
+                        record.totalEmissions
+                    ].forEach(function(value) {
+                        const td = document.createElement("td");
+                        td.textContent = value == null ? "" : String(value);
+                        row.appendChild(td);
+                    });
+
+                    tbody.appendChild(row);
+                });
+
+                table.append(thead, tbody);
+                container.appendChild(table);
+
+                recordsMessage.textContent =
+                    "Total saved records: " + records.length;
+
+            } catch (error) {
+                container.textContent = "Unable to load saved records.";
+                recordsMessage.textContent =
+                    "Please check whether the backend is running.";
+
+                console.error("Error loading records:", error);
+            }
+        }
+
+        loadCarbonRecords();
+    </script>
+
+</body>
+</html>

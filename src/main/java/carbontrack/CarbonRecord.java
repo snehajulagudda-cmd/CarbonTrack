@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 
 @Entity
 public class CarbonRecord {
@@ -16,6 +17,7 @@ public class CarbonRecord {
     private String vehicleType;
     private double electricity;
     private double totalEmissions;
+    private LocalDate logDate;
 
     public CarbonRecord() {
     }
@@ -26,6 +28,7 @@ public class CarbonRecord {
         this.vehicleType = vehicleType;
         this.electricity = electricity;
         this.totalEmissions = totalEmissions;
+        this.logDate = LocalDate.now();
     }
 
     public Long getId() {
@@ -62,5 +65,13 @@ public class CarbonRecord {
 
     public void setTotalEmissions(double totalEmissions) {
         this.totalEmissions = totalEmissions;
+    }
+
+    public LocalDate getLogDate() {
+        return logDate;
+    }
+
+    public void setLogDate(LocalDate logDate) {
+        this.logDate = logDate;
     }
 }

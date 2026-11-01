@@ -221,11 +221,117 @@
             color: #526457;
         }
 
+
+        .analytics-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 18px 0;
+        }
+
+        .analytics-btn {
+            background: #e5f5e9;
+            color: #146c43;
+            border: 1px solid #198754;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .analytics-btn.active,
+        .analytics-btn:hover {
+            background: #198754;
+            color: white;
+        }
+
+        #analyticsResult {
+            margin-top: 16px;
+            padding: 20px;
+            background: #f1f7f2;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+
+        #analyticsTotal {
+            color: #198754;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .analytics-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 18px;
+            min-height: 250px;
+            padding: 20px 12px 10px;
+            margin-top: 15px;
+            background: #f8fbf8;
+            border: 1px solid #e0eee3;
+            border-radius: 10px;
+        }
+
+        .chart-column {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 210px;
+            gap: 8px;
+        }
+
+        .chart-value {
+            font-size: 13px;
+            font-weight: bold;
+            color: #26382c;
+            overflow-wrap: anywhere;
+            text-align: center;
+        }
+
+        .chart-bar {
+            width: min(72px, 85%);
+            min-height: 4px;
+            background: linear-gradient(180deg, #96e6a1, #198754);
+            border-radius: 7px 7px 0 0;
+            transition: height 0.3s ease;
+        }
+
+        .chart-label {
+            font-weight: bold;
+            font-size: 13px;
+            text-align: center;
+            color: #146c43;
+        }
+
+        #recommendationsList {
+            padding-left: 24px;
+        }
+
+        #recommendationsList li {
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+
         footer {
             text-align: center;
             padding: 25px;
             color: #526457;
         }
+
+        .goal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 20px; }
+        .goal-card { border: 1px solid #d9eadf; border-left: 5px solid #198754; border-radius: 10px; padding: 18px; background: #fbfefb; }
+        .goal-card h3 { color: #146c43; margin-bottom: 10px; }
+        .goal-card p { margin: 8px 0; line-height: 1.5; overflow-wrap: anywhere; }
+        .goal-progress { width: 100%; height: 14px; background: #e5eee7; border-radius: 20px; overflow: hidden; margin: 12px 0; }
+        .goal-progress-fill { height: 100%; background: linear-gradient(90deg, #96e6a1, #198754); width: 0%; transition: width .25s ease; }
+        .goal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        .goal-actions button { border: 0; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold; }
+        .goal-edit { background: #e5f5e9; color: #146c43; }
+        .goal-delete { background: #fde8e7; color: #a12622; }
+        #goalMessage { margin-top: 14px; line-height: 1.5; }
 
         @media (max-width: 600px) {
             header {
@@ -276,7 +382,9 @@
     <nav>
         <a href="#dashboard">Dashboard</a>
         <a href="#calculator">Calculator</a>
+        <a href="#analytics">Analytics</a>
         <a href="#records">My Records</a>
+        <a href="#goals">Goal Tracking</a>
         <a href="#tips">Eco Tips</a>
     </nav>
 
@@ -367,6 +475,28 @@
 
         </section>
 
+        <!-- Daily, Weekly and Monthly Analytics -->
+        <section class="section" id="analytics">
+            <h2>📊 Carbon Emissions Analytics</h2>
+            <p>View your saved carbon emissions by day, week, or month.</p>
+
+            <div class="analytics-controls" aria-label="Choose analytics period">
+                <button type="button" class="analytics-btn active" data-period="daily">Daily</button>
+                <button type="button" class="analytics-btn" data-period="weekly">Weekly</button>
+                <button type="button" class="analytics-btn" data-period="monthly">Monthly</button>
+            </div>
+
+            <div id="analyticsResult" role="status" aria-live="polite">
+                Loading analytics...
+            </div>
+
+            <h3 style="margin-top: 25px; color: #198754;">📈 Emissions Comparison Chart</h3>
+            <p style="margin-top: 8px;">Compare your daily, weekly, and monthly total emissions.</p>
+            <div id="analyticsChart" class="analytics-chart" role="img" aria-label="Bar chart comparing daily, weekly, and monthly carbon emissions">
+                <p>Loading chart...</p>
+            </div>
+        </section>
+
         <!-- Saved Records -->
         <section class="section" id="records">
 
@@ -380,6 +510,33 @@
 
         </section>
 
+        <!-- Milestone 2: Carbon Goal Tracking -->
+        <section class="section" id="goals">
+            <h2>🎯 Carbon Reduction Goals</h2>
+            <p>Create a target for your carbon emissions and track your progress during a selected date range.</p>
+            <form id="goalForm" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label for="goalName">Goal Name</label>
+                    <input type="text" id="goalName" placeholder="Example: Monthly Carbon Reduction" required maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="targetEmissions">Target Emissions (kg CO₂)</label>
+                    <input type="number" id="targetEmissions" min="0.01" step="any" placeholder="Example: 100" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalStartDate">Start Date</label>
+                    <input type="date" id="goalStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalEndDate">End Date</label>
+                    <input type="date" id="goalEndDate" required>
+                </div>
+                <button type="submit" class="primary-btn">Create Goal</button>
+            </form>
+            <p id="goalMessage" role="status" aria-live="polite"></p>
+            <div id="goalsList" class="goal-grid"><p>Loading goals...</p></div>
+        </section>
+
         <!-- Eco Tips -->
         <section class="section tips" id="tips">
 
@@ -391,6 +548,13 @@
             <p>♻️ Reduce waste and reuse materials whenever possible.</p>
             <p>🔌 Use energy-efficient appliances to reduce electricity usage.</p>
 
+        </section>
+
+        <!-- Personalized Carbon Reduction Recommendations -->
+        <section class="section" id="recommendations">
+            <h2>🌱 Your Carbon Reduction Tips</h2>
+            <p id="recommendationsStatus" role="status">Loading recommendations...</p>
+            <ul id="recommendationsList"></ul>
         </section>
 
     </main>
@@ -531,6 +695,9 @@
                     result.append(heading, travel, power, total, saved);
 
                     await loadCarbonRecords();
+                    await loadRecommendations(travelCO2, electricityCO2);
+                    await loadAnalyticsChart();
+                    await loadAnalytics("daily");
 
                 } catch (error) {
                     result.textContent =
@@ -539,6 +706,147 @@
                     console.error(error);
                 }
             });
+
+        // Load personalized recommendations from the backend API
+        async function loadRecommendations(travelEmissions, electricityEmissions) {
+            const list = document.getElementById("recommendationsList");
+            const status = document.getElementById("recommendationsStatus");
+
+            try {
+                const travel = Number(travelEmissions);
+                const electricity = Number(electricityEmissions);
+
+                if (!Number.isFinite(travel) || !Number.isFinite(electricity)) {
+                    status.textContent = "Calculate your footprint to get personalized recommendations.";
+                    list.replaceChildren();
+                    return;
+                }
+
+                const url = "/api/recommendations?travelEmissions=" +
+                    encodeURIComponent(travel) + "&electricityEmissions=" +
+                    encodeURIComponent(electricity);
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("Could not load recommendations.");
+                }
+
+                const recommendations = await response.json();
+                list.replaceChildren();
+
+                recommendations.forEach(function (recommendation) {
+                    const item = document.createElement("li");
+                    item.textContent = recommendation;
+                    list.appendChild(item);
+                });
+
+                status.textContent = "Suggestions based on your latest carbon calculation:";
+            } catch (error) {
+                status.textContent = "Unable to load recommendations. Please refresh the page.";
+                console.error("Error loading recommendations:", error);
+            }
+        }
+
+        // Daily, weekly and monthly carbon emissions analytics
+        async function loadAnalytics(period) {
+            const result = document.getElementById("analyticsResult");
+            const buttons = document.querySelectorAll(".analytics-btn");
+
+            buttons.forEach(function(button) {
+                button.classList.toggle("active", button.dataset.period === period);
+            });
+
+            result.textContent = "Loading " + period + " analytics...";
+
+            try {
+                const response = await fetch(
+                    "/api/carbon/analytics?period=" + encodeURIComponent(period)
+                );
+
+                if (!response.ok) {
+                    throw new Error("Could not load analytics.");
+                }
+
+                const data = await response.json();
+                result.replaceChildren();
+
+                const periodTitle = document.createElement("h3");
+                const titleMap = {
+                    daily: "Daily Carbon Emissions",
+                    weekly: "Weekly Carbon Emissions",
+                    monthly: "Monthly Carbon Emissions"
+                };
+                periodTitle.textContent = titleMap[period] || "Carbon Emissions";
+
+                const totalLabel = document.createElement("p");
+                totalLabel.textContent = "Total estimated emissions:";
+
+                const total = document.createElement("p");
+                total.id = "analyticsTotal";
+                total.textContent = Number(data.totalEmissions || 0).toFixed(2) + " kg CO₂";
+
+                const dates = document.createElement("p");
+                dates.textContent = "Period: " + (data.startDate || "-") + " to " + (data.endDate || "-");
+
+                result.append(periodTitle, totalLabel, total, dates);
+            } catch (error) {
+                result.textContent = "Unable to load analytics. Please check that the backend is running and the analytics API is available.";
+                console.error("Error loading analytics:", error);
+            }
+        }
+
+        // Draw a simple bar chart using the existing analytics API (no extra library needed).
+        async function loadAnalyticsChart() {
+            const chart = document.getElementById("analyticsChart");
+            chart.textContent = "Loading chart...";
+            const periods = [
+                { key: "daily", label: "Daily" },
+                { key: "weekly", label: "Weekly" },
+                { key: "monthly", label: "Monthly" }
+            ];
+
+            try {
+                const values = await Promise.all(periods.map(async function(period) {
+                    const response = await fetch("/api/carbon/analytics?period=" + period.key);
+                    if (!response.ok) throw new Error("Could not load " + period.key + " analytics.");
+                    const data = await response.json();
+                    return { label: period.label, total: Number(data.totalEmissions) || 0 };
+                }));
+
+                chart.replaceChildren();
+                const maxValue = Math.max(...values.map(function(item) { return item.total; }), 1);
+
+                values.forEach(function(item) {
+                    const column = document.createElement("div");
+                    column.className = "chart-column";
+
+                    const value = document.createElement("div");
+                    value.className = "chart-value";
+                    value.textContent = item.total.toFixed(2) + " kg";
+
+                    const bar = document.createElement("div");
+                    bar.className = "chart-bar";
+                    bar.style.height = Math.max(4, (item.total / maxValue) * 145) + "px";
+                    bar.title = item.label + ": " + item.total.toFixed(2) + " kg CO₂";
+
+                    const label = document.createElement("div");
+                    label.className = "chart-label";
+                    label.textContent = item.label;
+
+                    column.append(value, bar, label);
+                    chart.appendChild(column);
+                });
+            } catch (error) {
+                chart.textContent = "Unable to load chart. Please check the analytics API.";
+                console.error("Error loading analytics chart:", error);
+            }
+        }
+
+        document.querySelectorAll(".analytics-btn").forEach(function(button) {
+            button.addEventListener("click", function() {
+                loadAnalytics(button.dataset.period);
+            });
+        });
 
         // Load Saved Records
         async function loadCarbonRecords() {
@@ -610,6 +918,26 @@
                 recordsMessage.textContent =
                     "Total saved records: " + records.length;
 
+                // Use the latest saved record to show recommendations on page load.
+                const latestRecord = records[records.length - 1];
+                if (latestRecord) {
+                    const vehicleName = String(latestRecord.vehicleType || "").toLowerCase();
+                    let vehicleFactor = 0;
+
+                    if (vehicleName.includes("car")) {
+                        vehicleFactor = 0.12;
+                    } else if (vehicleName.includes("motorcycle")) {
+                        vehicleFactor = 0.04;
+                    }
+
+                    const travelEmissions = Number(latestRecord.distance || 0) * vehicleFactor;
+                    const electricityEmissions = Number(latestRecord.electricity || 0) * 0.7;
+                    await loadRecommendations(travelEmissions, electricityEmissions);
+                } else {
+                    document.getElementById("recommendationsStatus").textContent =
+                        "Save your first carbon calculation to get personalized recommendations.";
+                }
+
             } catch (error) {
                 container.textContent = "Unable to load saved records.";
                 recordsMessage.textContent =
@@ -619,7 +947,174 @@
             }
         }
 
+        // Milestone 2: Goal Tracking API integration
+        const goalForm = document.getElementById("goalForm");
+        const goalMessage = document.getElementById("goalMessage");
+        const goalsList = document.getElementById("goalsList");
+
+        function showGoalMessage(message, isError = false) {
+            goalMessage.textContent = message;
+            goalMessage.style.color = isError ? "#a12622" : "#146c43";
+        }
+
+        async function loadGoals() {
+            goalsList.replaceChildren();
+            const loading = document.createElement("p");
+            loading.textContent = "Loading goals...";
+            goalsList.appendChild(loading);
+            try {
+                const response = await fetch("/api/goals");
+                if (!response.ok) throw new Error("Could not load goals.");
+                const goals = await response.json();
+                goalsList.replaceChildren();
+                if (!Array.isArray(goals) || goals.length === 0) {
+                    const empty = document.createElement("p");
+                    empty.textContent = "No goals created yet. Use the form above to create your first goal.";
+                    goalsList.appendChild(empty);
+                    return;
+                }
+                for (const goal of goals) {
+                    const card = document.createElement("article");
+                    card.className = "goal-card";
+                    const title = document.createElement("h3");
+                    title.textContent = goal.goalName || "Carbon Goal";
+                    card.appendChild(title);
+                    const target = document.createElement("p");
+                    target.textContent = "Target: " + Number(goal.targetEmissions || 0).toFixed(2) + " kg CO₂";
+                    card.appendChild(target);
+                    const dates = document.createElement("p");
+                    dates.textContent = "Period: " + (goal.startDate || "-") + " to " + (goal.endDate || "-");
+                    card.appendChild(dates);
+                    const progressText = document.createElement("p");
+                    progressText.textContent = "Loading progress...";
+                    card.appendChild(progressText);
+                    const progress = document.createElement("div");
+                    progress.className = "goal-progress";
+                    progress.setAttribute("role", "progressbar");
+                    progress.setAttribute("aria-label", "Carbon goal budget used");
+                    progress.setAttribute("aria-valuemin", "0");
+                    progress.setAttribute("aria-valuemax", "100");
+                    const fill = document.createElement("div");
+                    fill.className = "goal-progress-fill";
+                    progress.appendChild(fill);
+                    card.appendChild(progress);
+                    try {
+                        const progressResponse = await fetch("/api/goals/" + encodeURIComponent(goal.id) + "/progress");
+                        if (!progressResponse.ok) throw new Error("Could not load progress.");
+                        const data = await progressResponse.json();
+                        const targetValue = Number(data.targetEmissions || goal.targetEmissions || 0);
+                        const actual = Number(data.actualEmissions || 0);
+                        const remaining = Number(data.remainingEmissions || 0);
+                        const usedPercent = targetValue > 0 ? (actual / targetValue) * 100 : 0;
+                        const boundedPercent = Math.max(0, Math.min(100, usedPercent));
+                        progressText.textContent = "Emissions recorded: " + actual.toFixed(2) + " kg CO₂ | Remaining budget: " + remaining.toFixed(2) + " kg CO₂ | Budget used: " + usedPercent.toFixed(1) + "%";
+                        fill.style.width = boundedPercent + "%";
+                        progress.setAttribute("aria-valuenow", String(boundedPercent));
+                        const status = document.createElement("p");
+                        status.textContent = data.goalAchieved ? "Status: Within target ✅" : "Status: Target exceeded ⚠️";
+                        status.style.fontWeight = "bold";
+                        status.style.color = data.goalAchieved ? "#146c43" : "#a12622";
+                        card.appendChild(status);
+                    } catch (progressError) {
+                        progressText.textContent = "Progress could not be loaded. Check the goal progress API.";
+                    }
+                    const actions = document.createElement("div");
+                    actions.className = "goal-actions";
+                    const editButton = document.createElement("button");
+                    editButton.type = "button";
+                    editButton.className = "goal-edit";
+                    editButton.textContent = "Edit Goal";
+                    editButton.addEventListener("click", () => editGoal(goal));
+                    const deleteButton = document.createElement("button");
+                    deleteButton.type = "button";
+                    deleteButton.className = "goal-delete";
+                    deleteButton.textContent = "Delete Goal";
+                    deleteButton.addEventListener("click", () => deleteGoal(goal));
+                    actions.append(editButton, deleteButton);
+                    card.appendChild(actions);
+                    goalsList.appendChild(card);
+                }
+            } catch (error) {
+                goalsList.replaceChildren();
+                const message = document.createElement("p");
+                message.textContent = "Unable to load goals. Check that the backend is running and /api/goals is available.";
+                goalsList.appendChild(message);
+                console.error("Error loading goals:", error);
+            }
+        }
+
+        goalForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const goalName = document.getElementById("goalName").value.trim();
+            const targetEmissions = Number(document.getElementById("targetEmissions").value);
+            const startDate = document.getElementById("goalStartDate").value;
+            const endDate = document.getElementById("goalEndDate").value;
+            if (!goalName || !Number.isFinite(targetEmissions) || targetEmissions <= 0 || !startDate || !endDate || startDate > endDate) {
+                showGoalMessage("Please enter a name, a target greater than 0, and a valid date range (end date must not be before start date).", true);
+                return;
+            }
+            try {
+                const response = await fetch("/api/goals", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ goalName, targetEmissions, startDate, endDate })
+                });
+                if (!response.ok) throw new Error("Could not create goal.");
+                goalForm.reset();
+                showGoalMessage("Goal created successfully!");
+                await loadGoals();
+            } catch (error) {
+                showGoalMessage("Could not create goal. Please check the backend and try again.", true);
+                console.error("Error creating goal:", error);
+            }
+        });
+
+        async function editGoal(goal) {
+            const goalName = prompt("Enter goal name:", goal.goalName || "");
+            if (goalName === null) return;
+            const targetInput = prompt("Enter target emissions (kg CO₂):", String(goal.targetEmissions ?? ""));
+            if (targetInput === null) return;
+            const targetEmissions = Number(targetInput);
+            const startDate = prompt("Enter start date (YYYY-MM-DD):", goal.startDate || "");
+            if (startDate === null) return;
+            const endDate = prompt("Enter end date (YYYY-MM-DD):", goal.endDate || "");
+            if (endDate === null) return;
+            if (!goalName.trim() || !Number.isFinite(targetEmissions) || targetEmissions <= 0 || !/^\d{4}-\d{2}-\d{2}$/.test(startDate) || !/^\d{4}-\d{2}-\d{2}$/.test(endDate) || startDate > endDate) {
+                showGoalMessage("Invalid goal details. Please check the name, target, and dates.", true);
+                return;
+            }
+            try {
+                const response = await fetch("/api/goals/" + encodeURIComponent(goal.id), {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ goalName: goalName.trim(), targetEmissions, startDate, endDate })
+                });
+                if (!response.ok) throw new Error("Could not update goal.");
+                showGoalMessage("Goal updated successfully!");
+                await loadGoals();
+            } catch (error) {
+                showGoalMessage("Could not update goal. Check that the update API is available.", true);
+                console.error("Error updating goal:", error);
+            }
+        }
+
+        async function deleteGoal(goal) {
+            if (!confirm("Delete the goal '" + (goal.goalName || "Carbon Goal") + "'? This cannot be undone.")) return;
+            try {
+                const response = await fetch("/api/goals/" + encodeURIComponent(goal.id), { method: "DELETE" });
+                if (!response.ok) throw new Error("Could not delete goal.");
+                showGoalMessage("Goal deleted successfully.");
+                await loadGoals();
+            } catch (error) {
+                showGoalMessage("Could not delete goal. Check that the delete API is available.", true);
+                console.error("Error deleting goal:", error);
+            }
+        }
+
         loadCarbonRecords();
+        loadAnalytics("daily");
+        loadAnalyticsChart();
+        loadGoals();
     </script>
 
 </body>

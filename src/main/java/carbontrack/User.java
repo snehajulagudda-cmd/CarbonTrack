@@ -23,6 +23,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // Organisation Dashboard field
+    private String department;
+
     public User() {
     }
 
@@ -32,10 +35,12 @@ public class User {
         this.password = password;
     }
 
+    // ID
     public Long getId() {
         return id;
     }
 
+    // Name
     public String getName() {
         return name;
     }
@@ -44,6 +49,7 @@ public class User {
         this.name = name;
     }
 
+    // Email
     public String getEmail() {
         return email;
     }
@@ -52,11 +58,21 @@ public class User {
         this.email = email;
     }
 
+    // Password
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    // Department
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

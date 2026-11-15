@@ -17,9 +17,18 @@
         body {
             background: #f1f7f2;
             color: #26382c;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 235px minmax(0, 1fr);
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+                "header header"
+                "sidebar content"
+                ". footer";
         }
 
         header {
+            grid-area: header;
             background: linear-gradient(135deg, #146c43, #198754);
             color: white;
             padding: 25px 5%;
@@ -53,26 +62,69 @@
         }
 
         nav {
-            background: white;
-            padding: 16px 5%;
-            box-shadow: 0 2px 8px #ddd;
+            grid-area: sidebar;
+            background: #ffffff;
+            padding: 24px 14px;
+            box-shadow: 3px 0 14px rgba(20, 108, 67, 0.08);
+            border-right: 1px solid #e0eee3;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            min-height: calc(100vh - 145px);
+            align-self: stretch;
         }
 
         nav a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-height: 50px;
+            padding: 12px 15px;
+            border-radius: 10px;
             text-decoration: none;
-            color: #198754;
-            margin-right: 25px;
-            font-weight: bold;
+            color: #286344;
+            font-weight: 700;
+            border-left: 4px solid transparent;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
         }
 
-        nav a:hover {
-            color: #146c43;
+        nav a:hover,
+        nav a:focus-visible,
+        nav a.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, #146c43, #198754);
+            border-left-color: #b7ef8a;
+            transform: translateX(3px);
+            outline: none;
+        }
+
+        .nav-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            flex: 0 0 30px;
+            border-radius: 9px;
+            background: #eaf6ed;
+            font-size: 18px;
+            line-height: 1;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        nav a:hover .nav-icon,
+        nav a:focus-visible .nav-icon,
+        nav a.active .nav-icon {
+            background: rgba(255, 255, 255, 0.18);
+            transform: scale(1.06);
         }
 
         .main {
-            padding: 30px 5%;
-            max-width: 1250px;
-            margin: auto;
+            grid-area: content;
+            padding: 30px clamp(18px, 3vw, 42px);
+            width: 100%;
+            max-width: 1450px;
+            margin: 0 auto;
         }
 
         .welcome {
@@ -316,6 +368,7 @@
         }
 
         footer {
+            grid-area: footer;
             text-align: center;
             padding: 25px;
             color: #526457;
@@ -333,7 +386,17 @@
         .goal-delete { background: #fde8e7; color: #a12622; }
         #goalMessage { margin-top: 14px; line-height: 1.5; }
 
-        @media (max-width: 600px) {
+        @media (max-width: 760px) {
+            body {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto auto 1fr auto;
+                grid-template-areas:
+                    "header"
+                    "sidebar"
+                    "content"
+                    "footer";
+            }
+
             header {
                 padding: 22px;
             }
@@ -342,17 +405,24 @@
                 font-size: 25px;
             }
 
-            .main {
-                padding: 18px;
-            }
-
             nav {
-                padding: 15px 20px;
+                min-height: auto;
+                padding: 12px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 7px;
+                border-right: 0;
+                border-bottom: 1px solid #e0eee3;
             }
 
             nav a {
-                display: inline-block;
-                margin: 6px 12px 6px 0;
+                min-height: 40px;
+                padding: 9px 12px;
+                font-size: 13px;
+            }
+
+            .main {
+                padding: 18px;
             }
 
             .welcome h2 {
@@ -363,10 +433,71 @@
                 font-size: 26px;
             }
         }
+
+
+        /* Enhanced dashboard visual system */
+        .main { max-width: 1600px; padding: 34px clamp(20px, 3.2vw, 52px); }
+        .dashboard-hero {
+            position: relative; overflow: hidden; display: flex; justify-content: space-between;
+            align-items: center; gap: 24px; padding: clamp(26px, 4vw, 44px);
+            border-radius: 24px; margin-bottom: 26px; color: #123d2b;
+            background: radial-gradient(circle at 88% 15%, rgba(255,255,255,.42) 0 9%, transparent 9.5%),
+                        linear-gradient(120deg, #d9f99d 0%, #a7edb0 52%, #7bd99a 100%);
+            box-shadow: 0 16px 38px rgba(25,135,84,.13);
+        }
+        .dashboard-hero:after { content: "🌱"; position:absolute; right:7%; bottom:-34px; font-size: clamp(90px, 12vw, 160px); opacity:.13; transform:rotate(-14deg); }
+        .hero-copy, .hero-actions { position:relative; z-index:1; }
+        .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border-radius:30px; background:rgba(255,255,255,.48); color:#17633d; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:15px; }
+        .dashboard-hero h2 { font-size:clamp(27px,3vw,38px); line-height:1.15; margin-bottom:12px; color:#153d2b; }
+        .dashboard-hero p { max-width:620px; color:#28583c; line-height:1.7; font-size:15px; }
+        .hero-date { display:block; margin-top:14px; font-size:13px; font-weight:700; color:#38684b; }
+        .hero-actions { display:flex; flex-direction:column; gap:10px; min-width:175px; }
+        .hero-action { display:inline-flex; justify-content:center; align-items:center; gap:9px; padding:13px 18px; border-radius:12px; text-decoration:none; font-weight:800; background:#126b43; color:white; box-shadow:0 8px 18px rgba(18,107,67,.2); transition:transform .2s, box-shadow .2s; }
+        .hero-action.secondary { background:rgba(255,255,255,.72); color:#17633d; box-shadow:none; }
+        .hero-action:hover { transform:translateY(-3px); box-shadow:0 12px 22px rgba(18,107,67,.22); }
+        .dashboard-heading { display:flex; justify-content:space-between; align-items:end; gap:12px; margin:28px 0 14px; }
+        .dashboard-heading h2 { color:#174b32; font-size:20px; }
+        .dashboard-heading p { color:#718278; font-size:13px; }
+        .cards.dashboard-stats { grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:0; }
+        .dashboard-stats .card { position:relative; padding:22px; min-height:160px; border:1px solid #e5efe8; border-left:0; border-radius:18px; box-shadow:0 9px 24px rgba(25,70,45,.06); overflow:hidden; }
+        .dashboard-stats .card:before { content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:linear-gradient(#9be56e,#168451); }
+        .stat-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+        .stat-icon { width:43px; height:43px; display:grid; place-items:center; border-radius:13px; background:#eaf8ed; font-size:21px; }
+        .stat-label { color:#65766b; font-weight:700; font-size:13px; }
+        .dashboard-stats .number { font-size:clamp(27px,3vw,34px); margin:14px 0 5px; color:#14794a; }
+        .stat-note { color:#89968e; font-size:12px; }
+        .dashboard-lower { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(260px,.85fr); gap:18px; margin-top:20px; }
+        .dashboard-panel { background:#fff; border:1px solid #e5efe8; border-radius:18px; padding:22px; box-shadow:0 9px 24px rgba(25,70,45,.055); min-width:0; }
+        .dashboard-panel h3 { color:#174b32; font-size:17px; margin-bottom:7px; }
+        .dashboard-panel .panel-subtitle { color:#849188; font-size:12px; line-height:1.5; }
+        .dashboard-chart { min-height:210px; margin-top:12px; }
+        .dashboard-chart .chart-column { height:190px; }
+        .dashboard-chart .chart-bar { background:linear-gradient(180deg,#b5ef82,#168451); box-shadow:0 5px 12px rgba(22,132,81,.13); }
+        .quick-links { display:grid; gap:10px; margin-top:16px; }
+        .quick-link { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid #edf3ee; border-radius:12px; color:#28583c; text-decoration:none; transition:background .2s, transform .2s; }
+        .quick-link:hover { background:#f1faf3; transform:translateX(3px); }
+        .quick-link-icon { width:36px; height:36px; flex:0 0 36px; display:grid; place-items:center; border-radius:10px; background:#eaf8ed; }
+        .quick-link strong { display:block; font-size:13px; }
+        .quick-link small { display:block; margin-top:3px; color:#87948b; font-size:11px; }
+        .dashboard-note { margin-top:18px; padding:16px 18px; border-radius:15px; background:linear-gradient(100deg,#eff9e9,#f1fbf5); border:1px solid #e1f0df; display:flex; gap:12px; align-items:flex-start; color:#386148; }
+        .dashboard-note span { font-size:22px; }
+        .dashboard-note p { font-size:13px; line-height:1.6; }
+        @media(max-width:950px) { .dashboard-lower { grid-template-columns:1fr; } }
+        @media(max-width:700px) { .dashboard-hero { flex-direction:column; align-items:flex-start; } .hero-actions { flex-direction:row; flex-wrap:wrap; } .cards.dashboard-stats { grid-template-columns:1fr; } .dashboard-heading { align-items:flex-start; flex-direction:column; } }
+
+        /* Separate pages: persistent sidebar, one content section per URL */
+body.page-dashboard #calculator, body.page-dashboard #analytics, body.page-dashboard #records, body.page-dashboard #goals, body.page-dashboard #tips, body.page-dashboard #recommendations, body.page-dashboard #profile {display:none!important}
+body.page-calculator #dashboard, body.page-calculator .cards, body.page-calculator #analytics, body.page-calculator #records, body.page-calculator #goals, body.page-calculator #tips, body.page-calculator #recommendations, body.page-calculator #profile {display:none!important}
+body.page-analytics #dashboard, body.page-analytics .cards, body.page-analytics #calculator, body.page-analytics #records, body.page-analytics #goals, body.page-analytics #tips, body.page-analytics #recommendations, body.page-analytics #profile {display:none!important}
+body.page-records #dashboard, body.page-records .cards, body.page-records #calculator, body.page-records #analytics, body.page-records #goals, body.page-records #tips, body.page-records #recommendations, body.page-records #profile {display:none!important}
+body.page-goals #dashboard, body.page-goals .cards, body.page-goals #calculator, body.page-goals #analytics, body.page-goals #records, body.page-goals #tips, body.page-goals #recommendations, body.page-goals #profile {display:none!important}
+body.page-tips #dashboard, body.page-tips .cards, body.page-tips #calculator, body.page-tips #analytics, body.page-tips #records, body.page-tips #goals, body.page-tips #recommendations, body.page-tips #profile {display:none!important}
+body.page-profile #dashboard, body.page-profile .cards, body.page-profile #calculator, body.page-profile #analytics, body.page-profile #records, body.page-profile #goals, body.page-profile #tips, body.page-profile #recommendations {display:none!important}
+
     </style>
 </head>
 
-<body>
+<body class="page-dashboard">
 
     <header>
         <div>
@@ -379,48 +510,93 @@
         </button>
     </header>
 
-    <nav>
-        <a href="#dashboard">Dashboard</a>
-        <a href="#calculator">Calculator</a>
-        <a href="#analytics">Analytics</a>
-        <a href="#records">My Records</a>
-        <a href="#goals">Goal Tracking</a>
-        <a href="#tips">Eco Tips</a>
+    <nav aria-label="Main navigation">
+        <a href="/" class="active">
+            <span class="nav-icon" aria-hidden="true">🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="/calculator.html">
+            <span class="nav-icon" aria-hidden="true">🚗</span>
+            <span>Calculator</span>
+        </a>
+        <a href="/analytics.html">
+            <span class="nav-icon" aria-hidden="true">📊</span>
+            <span>Analytics</span>
+        </a>
+        <a href="/records.html">
+            <span class="nav-icon" aria-hidden="true">📋</span>
+            <span>My Records</span>
+        </a>
+        <a href="/goals.html">
+            <span class="nav-icon" aria-hidden="true">🎯</span>
+            <span>Goal Tracking</span>
+        </a>
+        <a href="/tips.html">
+            <span class="nav-icon" aria-hidden="true">🌍</span>
+            <span>Eco Tips</span>
+        </a>
+        <a href="/profile.html">
+            <span class="nav-icon" aria-hidden="true">👤</span>
+            <span>Profile</span>
+        </a>
     </nav>
 
     <main class="main">
 
-        <!-- Welcome Section -->
-        <section class="welcome" id="dashboard">
-            <h2>Welcome, <span id="userName">User</span>! 🌍</h2>
-            <p>
-                Track your carbon footprint and take small steps
-                towards a greener future.
-            </p>
+        <!-- Enhanced Dashboard Overview -->
+        <section class="dashboard-hero" id="dashboard">
+            <div class="hero-copy">
+                <span class="hero-eyebrow">🌍 YOUR SUSTAINABILITY OVERVIEW</span>
+                <h2>Welcome back, <span id="userName">User</span>!</h2>
+                <p>Small everyday choices create a cleaner tomorrow. Keep track of your footprint, understand your impact, and take your next step towards a greener lifestyle.</p>
+                <span class="hero-date" id="dashboardDate">Your personal carbon dashboard</span>
+            </div>
+            <div class="hero-actions">
+                <a class="hero-action" href="/calculator.html">＋ Calculate footprint</a>
+                <a class="hero-action secondary" href="/goals.html">◎ View my goals</a>
+            </div>
         </section>
 
-        <!-- Dashboard Cards -->
-        <section class="cards">
-
+        <div class="dashboard-heading">
+            <div><h2>Your latest footprint</h2><p>Summary from your most recent calculation</p></div>
+            <p>Live project data</p>
+        </div>
+        <section class="cards dashboard-stats">
             <div class="card">
-                <h3>🚗 Travel Distance</h3>
+                <div class="stat-top"><span class="stat-label">TRAVEL DISTANCE</span><span class="stat-icon">🚗</span></div>
                 <p class="number" id="travelTotal">0 km</p>
-                <p>Total distance in your latest calculation</p>
+                <p class="stat-note">Distance in your latest calculation</p>
             </div>
-
             <div class="card">
-                <h3>⚡ Electricity Usage</h3>
+                <div class="stat-top"><span class="stat-label">ELECTRICITY USAGE</span><span class="stat-icon">⚡</span></div>
                 <p class="number" id="electricityTotal">0 kWh</p>
-                <p>Electricity in your latest calculation</p>
+                <p class="stat-note">Power used in your latest calculation</p>
             </div>
-
             <div class="card">
-                <h3>🌿 Estimated CO₂</h3>
+                <div class="stat-top"><span class="stat-label">ESTIMATED CO₂</span><span class="stat-icon">🌿</span></div>
                 <p class="number" id="co2Total">0 kg</p>
-                <p>Estimated emissions in your latest calculation</p>
+                <p class="stat-note">Estimated emissions in your latest calculation</p>
             </div>
-
         </section>
+
+        <section class="dashboard-lower" aria-label="Dashboard insights">
+            <div class="dashboard-panel">
+                <h3>📈 Emissions at a glance</h3>
+                <p class="panel-subtitle">Compare your saved daily, weekly and monthly emissions.</p>
+                <div id="dashboardAnalyticsChart" class="analytics-chart dashboard-chart" role="img" aria-label="Daily, weekly and monthly carbon emissions chart"><p>Loading your insights...</p></div>
+            </div>
+            <div class="dashboard-panel">
+                <h3>✨ Quick actions</h3>
+                <p class="panel-subtitle">Jump straight to the tools that help you reduce your footprint.</p>
+                <div class="quick-links">
+                    <a class="quick-link" href="/calculator.html"><span class="quick-link-icon">🧮</span><span><strong>Calculate emissions</strong><small>Record a new activity</small></span></a>
+                    <a class="quick-link" href="/analytics.html"><span class="quick-link-icon">📊</span><span><strong>Explore analytics</strong><small>Review daily, weekly and monthly data</small></span></a>
+                    <a class="quick-link" href="/records.html"><span class="quick-link-icon">📋</span><span><strong>View recent records</strong><small>Check your saved calculations</small></span></a>
+                    <a class="quick-link" href="/goals.html"><span class="quick-link-icon">🎯</span><span><strong>Manage carbon goals</strong><small>Set a target and follow progress</small></span></a>
+                </div>
+            </div>
+        </section>
+        <div class="dashboard-note"><span>💡</span><p><strong>Eco reminder:</strong> Choose public transport when possible, switch off unused lights, and consider walking or cycling for short trips. Every small action contributes to a lower-carbon future.</p></div>
 
         <!-- Carbon Calculator -->
         <section class="section" id="calculator">
@@ -557,6 +733,22 @@
             <ul id="recommendationsList"></ul>
         </section>
 
+        <!-- User Profile -->
+        <section class="section" id="profile">
+            <h2>👤 My Profile</h2>
+            <p style="margin: 8px 0 20px;">Your CarbonTrack account details.</p>
+            <div style="background:#ffffff; border:1px solid #dceee1; border-radius:14px; padding:24px; max-width:650px; box-shadow:0 4px 14px rgba(20,108,67,0.06);">
+                <div style="display:flex; align-items:center; gap:16px; margin-bottom:22px;">
+                    <div style="width:64px;height:64px;border-radius:50%;background:#e4f5e8;display:flex;align-items:center;justify-content:center;font-size:30px;">👤</div>
+                    <div><h3 id="profileName" style="color:#146c43; margin-bottom:5px;">User</h3><p style="color:#668071;">CarbonTrack Member</p></div>
+                </div>
+                <div style="padding:13px 0;border-top:1px solid #e7f0e9;"><strong>Full Name</strong><p id="profileFullName" style="margin-top:6px;color:#52665a;">Not available</p></div>
+                <div style="padding:13px 0;border-top:1px solid #e7f0e9;"><strong>Email Address</strong><p id="profileEmail" style="margin-top:6px;color:#52665a;">Not available</p></div>
+                <p style="margin-top:14px;font-size:13px;color:#718477;">Profile details are displayed from your current login session.</p>
+                <a href="/edit-profile.html" style="display:inline-block;margin-top:18px;padding:11px 20px;background:#198754;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">✏️ Edit Profile</a>
+            </div>
+        </section>
+
     </main>
 
     <footer>
@@ -564,6 +756,16 @@
     </footer>
 
     <script>
+
+(function(){
+ const map={"/":"dashboard","/index.html":"dashboard","/calculator.html":"calculator","/analytics.html":"analytics","/records.html":"records","/goals.html":"goals","/tips.html":"tips","/profile.html":"profile"};
+ const page=map[location.pathname]||"dashboard";
+ document.body.className="page-"+page;
+ document.querySelectorAll("nav a").forEach(a=>{
+   const href=a.getAttribute("href");
+   a.classList.toggle("active", href===location.pathname || (page==="dashboard" && href==="/"));
+ });
+})();
         /*
          * IMPORTANT:
          * This is only a frontend check using sessionStorage.
@@ -586,9 +788,31 @@
         }
 
         if (currentUser && currentUser.name) {
-            document.getElementById("userName").textContent =
-                currentUser.name;
+            document.getElementById("userName").textContent = currentUser.name;
         }
+
+        // Display logged-in user's details in the Profile section
+        if (currentUser) {
+            const displayName = currentUser.name || "User";
+            document.getElementById("profileName").textContent = displayName;
+            document.getElementById("profileFullName").textContent = displayName;
+            document.getElementById("profileEmail").textContent = currentUser.email || "Email not available in login session";
+        }
+
+        const dashboardDate = document.getElementById("dashboardDate");
+        if (dashboardDate) {
+            dashboardDate.textContent = new Intl.DateTimeFormat(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }).format(new Date());
+        }
+
+        // Highlight the selected sidebar item
+        document.querySelectorAll("nav a").forEach(function(link) {
+            link.addEventListener("click", function() {
+                document.querySelectorAll("nav a").forEach(function(item) {
+                    item.classList.remove("active");
+                });
+                this.classList.add("active");
+            });
+        });
 
         // Logout
         document.getElementById("logoutBtn").addEventListener("click", function() {
@@ -797,8 +1021,8 @@
 
         // Draw a simple bar chart using the existing analytics API (no extra library needed).
         async function loadAnalyticsChart() {
-            const chart = document.getElementById("analyticsChart");
-            chart.textContent = "Loading chart...";
+            const charts = [document.getElementById("analyticsChart"), document.getElementById("dashboardAnalyticsChart")].filter(Boolean);
+            charts.forEach(function(chart) { chart.textContent = "Loading chart..."; });
             const periods = [
                 { key: "daily", label: "Daily" },
                 { key: "weekly", label: "Weekly" },
@@ -813,31 +1037,28 @@
                     return { label: period.label, total: Number(data.totalEmissions) || 0 };
                 }));
 
-                chart.replaceChildren();
                 const maxValue = Math.max(...values.map(function(item) { return item.total; }), 1);
-
-                values.forEach(function(item) {
-                    const column = document.createElement("div");
-                    column.className = "chart-column";
-
-                    const value = document.createElement("div");
-                    value.className = "chart-value";
-                    value.textContent = item.total.toFixed(2) + " kg";
-
-                    const bar = document.createElement("div");
-                    bar.className = "chart-bar";
-                    bar.style.height = Math.max(4, (item.total / maxValue) * 145) + "px";
-                    bar.title = item.label + ": " + item.total.toFixed(2) + " kg CO₂";
-
-                    const label = document.createElement("div");
-                    label.className = "chart-label";
-                    label.textContent = item.label;
-
-                    column.append(value, bar, label);
-                    chart.appendChild(column);
+                charts.forEach(function(chart) {
+                    chart.replaceChildren();
+                    values.forEach(function(item) {
+                        const column = document.createElement("div");
+                        column.className = "chart-column";
+                        const value = document.createElement("div");
+                        value.className = "chart-value";
+                        value.textContent = item.total.toFixed(2) + " kg";
+                        const bar = document.createElement("div");
+                        bar.className = "chart-bar";
+                        bar.style.height = Math.max(4, (item.total / maxValue) * 145) + "px";
+                        bar.title = item.label + ": " + item.total.toFixed(2) + " kg CO₂";
+                        const label = document.createElement("div");
+                        label.className = "chart-label";
+                        label.textContent = item.label;
+                        column.append(value, bar, label);
+                        chart.appendChild(column);
+                    });
                 });
             } catch (error) {
-                chart.textContent = "Unable to load chart. Please check the analytics API.";
+                charts.forEach(function(chart) { chart.textContent = "Unable to load chart. Please check the analytics API."; });
                 console.error("Error loading analytics chart:", error);
             }
         }

@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarbonTrack</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f7f2;
+    color: #26382c;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "header header"
+        "sidebar content"
+        ". footer";
+}
+
+header {
+    grid-area: header;
+    background: linear-gradient(135deg, #146c43, #198754);
+    color: white;
+    padding: 25px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 30px;
+}
+
+header p {
+    margin-top: 8px;
+}
+
+.logout-btn {
+    background: white;
+    color: #198754;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+nav {
+    grid-area: sidebar;
+    background: white;
+    padding: 25px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+nav a {
+    padding: 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #286344;
+    font-weight: bold;
+}
+
+nav a:hover {
+    background: #198754;
+    color: white;
+}
+
+.main {
+    grid-area: content;
+    padding: 30px;
+    width: 100%;
+}
+
+.welcome {
+    background: linear-gradient(135deg, #d4fc79, #96e6a1);
+    padding: 35px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    margin-bottom: 12px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 5px solid #198754;
+    box-shadow: 0 3px 12px #0000000d;
+}
+
+.card h3 {
+    margin-bottom: 15px;
+    color: #526457;
+}
+
+.number {
+    color: #198754;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 25px 0;
+    box-shadow: 0 3px 12px #0000000d;
+}
+
+.section h2 {
+    color: #198754;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.primary-btn {
+    background: #198754;
+    color: white;
+    border: none;
+    padding: 13px 22px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    background: #146c43;
+}
+
+.activity-log-box {
+    background: #f5faf6;
+    border: 1px solid #d8eadc;
+    border-radius: 12px;
+    padding: 22px;
+}
+
+.activity-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 15px 0 25px;
+}
+
+.activity-tab {
+    padding: 15px 8px;
+    background: white;
+    border: 1px solid #cfe2d3;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.activity-tab.active {
+    background: #198754;
+    color: white;
+}
+
+.activity-preview {
+    background: #e5f5e9;
+    padding: 18px;
+    border-radius: 8px;
+    margin: 15px 0;
+    color: #146c43;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.status-message {
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+.success {
+    color: #198754;
+}
+
+.error {
+    color: #dc3545;
+}
+
+#result {
+    display: none;
+    background: #e5f5e9;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 13px;
+    background: #ddd;
+    border-radius: 20px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background: #198754;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th, td {
+    padding: 13px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #198754;
+    color: white;
+}
+
+footer {
+    grid-area: footer;
+    text-align: center;
+    padding: 25px;
+}
+
+@media(max-width: 850px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header"
+            "sidebar"
+            "content"
+            "footer";
+    }
+
+    nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .activity-tabs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>🌱 CarbonTrack</h1>
+        <p>Track your carbon footprint. Build a greener future.</p>
+    </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<nav>
+    <a href="#dashboard">🏠 Dashboard</a>
+    <a href="#activity">📝 Activity Log</a>
+    <a href="#calculator">🧮 Calculator</a>
+    <a href="#analytics">📊 Analytics</a>
+    <a href="#records">📋 Records</a>
+    <a href="#goals">🎯 Goals</a>
+    <a href="#tips">💡 Tips</a>
+    <a href="#profile">👤 Profile</a>
+    <a href="#leaderboard">🏆 Leaderboard</a>
+</nav>
+
+<main class="main">
+
+<!-- Dashboard -->
+<section class="welcome" id="dashboard">
+    <h2>Welcome to CarbonTrack 🌍</h2>
+    <p>Monitor your daily carbon emissions and take small steps towards a sustainable lifestyle.</p>
+</section>
+
+<div class="cards">
+    <div class="card">
+        <h3>Today's Footprint</h3>
+        <div class="number" id="todayTotal">0 kg</div>
+    </div>
+
+    <div class="card">
+        <h3>Total Records</h3>
+        <div class="number" id="recordCount">0</div>
+    </div>
+
+    <div class="card">
+        <h3>Monthly Footprint</h3>
+        <div class="number" id="monthlyTotal">0 kg</div>
+    </div>
+</div>
+
+<!-- Activity Logging -->
+<section class="section" id="activity">
+    <h2>📝 Activity Logging</h2>
+
+    <div class="activity-log-box">
+
+        <h3>Select Activity Category</h3>
+
+        <div class="activity-tabs">
+            <button class="activity-tab active"
+                onclick="selectCategory('Transport', this)">
+                🚗 Transport
+            </button>
+
+            <button class="activity-tab"
+                onclick="selectCategory('Electricity', this)">
+                ⚡ Electricity
+            </button>
+
+            <button class="activity-tab"
+                onclick="selectCategory('Food', this)">
+                🍎 Food
+            </button>
+
+            <button class="activity-tab"
+                onclick="selectCategory('Shopping', this)">
+                🛍️ Shopping
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label>Select Activity</label>
+            <select id="activityName" onchange="updatePreview()">
+                <option value="Car">Car</option>
+                <option value="Motorcycle">Motorcycle</option>
+                <option value="Bus">Bus</option>
+                <option value="Walking">Walking</option>
+                <option value="Cycling">Cycling</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Enter Quantity</label>
+            <input type="number" id="quantity"
+                min="0" step="0.1"
+                placeholder="Enter quantity"
+                oninput="updatePreview()">
+        </div>
+
+        <div class="activity-preview">
+            Estimated CO₂:
+            <span id="previewCO2">0.00</span> kg
+        </div>
+
+        <button class="primary-btn" onclick="saveActivity()">
+            Quick Log
+        </button>
+
+        <p id="activityStatus" class="status-message"></p>
+    </div>
+</section>
+
+<!-- Carbon Calculator -->
+<section class="section" id="calculator">
+    <h2>🧮 Carbon Footprint Calculator</h2>
+
+    <form id="carbonForm">
+
+        <div class="form-group">
+            <label>Travel Distance (km)</label>
+            <input type="number" id="distance"
+                min="0" step="0.1" value="0">
+        </div>
+
+        <div class="form-group">
+            <label>Vehicle Type</label>
+            <select id="vehicle">
+                <option value="0.12">Car</option>
+                <option value="0.04">Motorcycle</option>
+                <option value="0.05">Bus</option>
+                <option value="0">Walking</option>
+                <option value="0">Cycling</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Electricity Used (kWh)</label>
+            <input type="number" id="electricity"
+                min="0" step="0.1" value="0">
+        </div>
+
+        <button type="submit" class="primary-btn">
+            Calculate My Footprint
+        </button>
+
+    </form>
+
+    <div id="result"></div>
+</section>
+<!-- Analytics -->
+<section class="section" id="analytics">
+    <h2>📊 Carbon Analytics</h2>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Transport Emissions</h3>
+            <div class="number" id="transportTotal">0 kg</div>
+        </div>
+
+        <div class="card">
+            <h3>Electricity Emissions</h3>
+            <div class="number" id="electricityTotal">0 kg</div>
+        </div>
+
+        <div class="card">
+            <h3>Food & Shopping</h3>
+            <div class="number" id="otherTotal">0 kg</div>
+        </div>
+    </div>
+
+    <button class="primary-btn" onclick="loadRecords()">
+        Refresh Analytics
+    </button>
+</section>
+
+<!-- Records -->
+<section class="section" id="records">
+    <h2>📋 Activity Records</h2>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Category</th>
+                    <th>Activity</th>
+                    <th>Quantity</th>
+                    <th>CO₂ (kg)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody id="recordsBody">
+                <tr>
+                    <td colspan="6">No records available</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Goals -->
+<section class="section" id="goals">
+    <h2>🎯 Goal Tracking</h2>
+
+    <div class="form-group">
+        <label>Monthly CO₂ Goal (kg)</label>
+        <input type="number" id="monthlyGoal"
+            min="1" value="100">
+    </div>
+
+    <button class="primary-btn" onclick="updateGoal()">
+        Update Goal
+    </button>
+
+    <h3 style="margin-top:20px;">Monthly Goal Progress</h3>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="goalProgress"></div>
+    </div>
+
+    <p id="goalText">0% completed</p>
+</section>
+
+<!-- Tips -->
+<section class="section" id="tips">
+    <h2>💡 Green Tips</h2>
+
+    <p>🚲 Use bicycles or walk for short distances.</p>
+    <br>
+    <p>💡 Switch off lights when not in use.</p>
+    <br>
+    <p>🌳 Plant trees and protect green spaces.</p>
+    <br>
+    <p>🥗 Prefer sustainable and local food.</p>
+    <br>
+    <p>♻️ Reduce, reuse and recycle products.</p>
+</section>
+<!-- Community Leaderboard -->
+<section class="section" id="leaderboard">
+
+    <h2>🏆 Community Leaderboard</h2>
+
+    <p>Discover and compare community carbon footprints.</p>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>🥇 Top Performer</h3>
+            <div class="number">Green Champion</div>
+        </div>
+
+        <div class="card">
+            <h3>👥 Community Members</h3>
+            <div class="number">50</div>
+        </div>
+
+        <div class="card">
+            <h3>🌱 Green Challenge</h3>
+            <div class="number">Active</div>
+        </div>
+
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th>Badge</th>
+                    <th>CO₂ Emissions</th>
+                </tr>
+            </thead>
+
+            <tbody id="leaderboardBody">
+
+                <tr>
+                    <td>1</td>
+                    <td>Green Champion</td>
+                    <td>🥇 Gold</td>
+                    <td>25 kg</td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>Eco Warrior</td>
+                    <td>🥈 Silver</td>
+                    <td>35 kg</td>
+                </tr>
+
+                <tr>
+                    <td>3</td>
+                    <td>Nature Lover</td>
+                    <td>🥉 Bronze</td>
+                    <td>45 kg</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3 style="margin-top:25px;">💡 Green Habit Tips</h3>
+
+    <p>🚲 Prefer cycling and public transport.</p>
+    <p>⚡ Reduce unnecessary electricity usage.</p>
+    <p>♻️ Reuse and recycle products.</p>
+
+</section>
+<!-- Profile -->
+<section class="section" id="profile">
+    <h2>👤 My Profile</h2>
+
+    <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="profileName"
+            placeholder="Enter your name">
+    </div>
+
+    <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="profileEmail"
+            placeholder="Enter your email">
+    </div>
+
+    <div class="form-group">
+        <label>College / Organization</label>
+        <input type="text" id="profileCollege"
+            placeholder="Enter college name">
+    </div>
+
+    <button class="primary-btn" onclick="saveProfile()">
+        Save Profile
+    </button>
+
+    <p id="profileStatus" class="status-message"></p>
+</section>
+
+</main>
+
+<footer>
+    <p>© 2026 CarbonTrack | Building a Greener Future 🌱</p>
+</footer>
+<script>
+
+let selectedCategory = "Transport";
+
+// Activity emission factors
+const activityOptions = {
+    Transport: [
+        { name: "Car", unit: "km", factor: 0.12 },
+        { name: "Motorcycle", unit: "km", factor: 0.04 },
+        { name: "Bus", unit: "km", factor: 0.05 },
+        { name: "Walking", unit: "km", factor: 0 },
+        { name: "Cycling", unit: "km", factor: 0 }
+    ],
+
+    Electricity: [
+        { name: "Electricity", unit: "kWh", factor: 0.70 }
+    ],
+
+    Food: [
+        { name: "Beef", unit: "kg", factor: 27 },
+        { name: "Chicken", unit: "kg", factor: 6.9 },
+        { name: "Vegetables", unit: "kg", factor: 2 }
+    ],
+
+    Shopping: [
+        { name: "Clothing", unit: "item", factor: 20 },
+        { name: "Electronics", unit: "item", factor: 50 },
+        { name: "General Purchase", unit: "item", factor: 5 }
+    ]
+};
+
+
+// Select activity category
+function selectCategory(category, button) {
+    selectedCategory = category;
+
+    document.querySelectorAll(".activity-tab").forEach(tab => {
+        tab.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    const dropdown = document.getElementById("activityName");
+    dropdown.innerHTML = "";
+
+    activityOptions[category].forEach(activity => {
+        const option = document.createElement("option");
+        option.value = activity.name;
+        option.textContent = activity.name;
+        dropdown.appendChild(option);
+    });
+
+    document.getElementById("quantity").value = "";
+
+    updatePreview();
+}
+
+
+// Get selected activity
+function getSelectedActivity() {
+    return activityOptions[selectedCategory].find(
+        activity =>
+            activity.name === document.getElementById("activityName").value
+    );
+}
+
+
+// Calculate live CO2 preview
+function updatePreview() {
+    const activity = getSelectedActivity();
+
+    const quantity = Number(
+        document.getElementById("quantity").value
+    );
+
+    const emission = activity && quantity > 0
+        ? quantity * activity.factor
+        : 0;
+
+    document.getElementById("previewCO2").textContent =
+        emission.toFixed(2);
+}
+
+
+// Today's date
+function getToday() {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+// Save Activity
+async function saveActivity() {
+
+    const activity = getSelectedActivity();
+
+    const quantity = Number(
+        document.getElementById("quantity").value
+    );
+
+    const status = document.getElementById("activityStatus");
+
+    if (!activity || !Number.isFinite(quantity) || quantity <= 0) {
+        status.textContent = "Please enter a valid quantity.";
+        status.className = "status-message error";
+        return;
+    }
+
+    const emissions = quantity * activity.factor;
+
+    const record = {
+        category: selectedCategory,
+        activityName: activity.name,
+        quantity: quantity,
+        unit: activity.unit,
+        totalEmissions: emissions,
+        logDate: getToday(),
+
+        distance: selectedCategory === "Transport" ? quantity : 0,
+
+        vehicleType: selectedCategory === "Transport"
+            ? activity.name : selectedCategory,
+
+        electricity: selectedCategory === "Electricity"
+            ? quantity : 0
+    };
+
+    status.textContent = "Saving activity...";
+    status.className = "status-message";
+
+    try {
+
+        const response = await fetch("/api/carbon", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(record)
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to save activity");
+        }
+
+        status.textContent = "Activity saved successfully!";
+        status.className = "status-message success";
+
+        document.getElementById("quantity").value = "";
+
+        updatePreview();
+
+        await loadRecords();
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Error saving activity. Check backend connection.";
+
+        status.className = "status-message error";
+    }
+}
+
+
+// Existing Carbon Calculator
+document.getElementById("carbonForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const distance = Number(
+            document.getElementById("distance").value
+        );
+
+        const vehicleFactor = Number(
+            document.getElementById("vehicle").value
+        );
+
+        const electricity = Number(
+            document.getElementById("electricity").value
+        );
+
+        if (
+            distance < 0 ||
+            electricity < 0 ||
+            !Number.isFinite(distance) ||
+            !Number.isFinite(electricity)
+        ) {
+            alert("Please enter valid values.");
+            return;
+        }
+
+        const travelCO2 = distance * vehicleFactor;
+        const electricityCO2 = electricity * 0.70;
+
+        const totalCO2 = travelCO2 + electricityCO2;
+
+        const result = document.getElementById("result");
+
+        result.style.display = "block";
+
+        result.innerHTML = `
+            <h3>Your Carbon Footprint</h3>
+            <p>Travel CO₂: ${travelCO2.toFixed(2)} kg</p>
+            <p>Electricity CO₂: ${electricityCO2.toFixed(2)} kg</p>
+            <h3>Total: ${totalCO2.toFixed(2)} kg CO₂</h3>
+        `;
+
+        const vehicleName =
+            document.getElementById("vehicle")
+            .selectedOptions[0].text;
+
+        const record = {
+            distance: distance,
+            vehicleType: vehicleName,
+            electricity: electricity,
+            totalEmissions: totalCO2,
+            logDate: getToday(),
+            category: "Calculator",
+            activityName: "Travel and Electricity",
+            quantity: distance + electricity,
+            unit: "combined"
+        };
+
+        try {
+
+            const response = await fetch("/api/carbon", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(record)
+            });
+
+            if (!response.ok) {
+                throw new Error("Save failed");
+            }
+
+            result.innerHTML +=
+                "<p>Record saved successfully!</p>";
+
+            await loadRecords();
+
+        } catch (error) {
+
+            console.error(error);
+
+            result.innerHTML +=
+                "<p>Could not save. Check backend connection.</p>";
+        }
+    }
+);
+
+
+// Load records from backend
+async function loadRecords() {
+
+    try {
+
+        const response = await fetch("/api/carbon");
+
+        if (!response.ok) {
+            throw new Error("Unable to load records");
+        }
+
+        const records = await response.json();
+
+        displayRecords(records);
+
+        updateDashboard(records);
+
+    } catch (error) {
+
+        console.error("Loading error:", error);
+    }
+}
+
+
+// Display records
+function displayRecords(records) {
+
+    const tbody = document.getElementById("recordsBody");
+
+    if (!records || records.length === 0) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6">No records available</td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    tbody.innerHTML = "";
+
+    records.forEach(record => {
+
+        const row = document.createElement("tr");
+
+        const values = [
+            record.id ?? "-",
+            record.category || "-",
+            record.activityName || record.vehicleType || "-",
+            `${record.quantity ?? record.distance ?? 0} ${record.unit || ""}`,
+            Number(record.totalEmissions || 0).toFixed(2),
+            record.logDate || "-"
+        ];
+
+        values.forEach(value => {
+
+            const cell = document.createElement("td");
+
+            cell.textContent = value;
+
+            row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+    });
+}
+
+
+// Update dashboard
+function updateDashboard(records) {
+
+    const today = getToday();
+
+    const currentMonth = today.substring(0, 7);
+
+    let todayTotal = 0;
+    let monthlyTotal = 0;
+
+    let transport = 0;
+    let electricity = 0;
+    let other = 0;
+
+    records.forEach(record => {
+
+        const emission = Number(record.totalEmissions || 0);
+
+        const date = record.logDate || "";
+
+        if (date === today) {
+            todayTotal += emission;
+        }
+
+        if (date.startsWith(currentMonth)) {
+            monthlyTotal += emission;
+        }
+
+        if (record.category === "Transport") {
+            transport += emission;
+        }
+
+        else if (record.category === "Electricity") {
+            electricity += emission;
+        }
+
+        else {
+            other += emission;
+        }
+    });
+
+    document.getElementById("todayTotal").textContent =
+        todayTotal.toFixed(2) + " kg";
+
+    document.getElementById("monthlyTotal").textContent =
+        monthlyTotal.toFixed(2) + " kg";
+
+    document.getElementById("recordCount").textContent =
+        records.length;
+
+    document.getElementById("transportTotal").textContent =
+        transport.toFixed(2) + " kg";
+
+    document.getElementById("electricityTotal").textContent =
+        electricity.toFixed(2) + " kg";
+
+    document.getElementById("otherTotal").textContent =
+        other.toFixed(2) + " kg";
+
+    updateGoalProgress(monthlyTotal);
+}
+
+
+// Update monthly goal
+function updateGoal() {
+
+    const goal = Number(
+        document.getElementById("monthlyGoal").value
+    );
+
+    if (!Number.isFinite(goal) || goal <= 0) {
+        alert("Enter a valid goal.");
+        return;
+    }
+
+    localStorage.setItem("carbonMonthlyGoal", goal);
+
+    loadRecords();
+}
+
+
+// Goal progress
+function updateGoalProgress(monthlyTotal) {
+
+    const goal = Number(
+        localStorage.getItem("carbonMonthlyGoal") || 100
+    );
+
+    document.getElementById("monthlyGoal").value = goal;
+
+    const percentage = Math.min(
+        (monthlyTotal / goal) * 100,
+        100
+    );
+
+    document.getElementById("goalProgress").style.width =
+        percentage + "%";
+
+    document.getElementById("goalText").textContent =
+        monthlyTotal.toFixed(2) + " kg recorded out of " +
+        goal + " kg goal (" + percentage.toFixed(1) + "%)";
+}
+
+
+// Save Profile
+function saveProfile() {
+
+    const name = document.getElementById("profileName").value;
+    const email = document.getElementById("profileEmail").value;
+    const college = document.getElementById("profileCollege").value;
+
+    const status = document.getElementById("profileStatus");
+
+    if (!name || !email) {
+
+        status.textContent = "Please enter your name and email.";
+
+        status.className = "status-message error";
+
+        return;
+    }
+
+    localStorage.setItem("profileName", name);
+    localStorage.setItem("profileEmail", email);
+    localStorage.setItem("profileCollege", college);
+
+    status.textContent = "Profile saved successfully!";
+
+    status.className = "status-message success";
+}
+
+
+// Load Profile
+function loadProfile() {
+
+    document.getElementById("profileName").value =
+        localStorage.getItem("profileName") || "";
+
+    document.getElementById("profileEmail").value =
+        localStorage.getItem("profileEmail") || "";
+
+    document.getElementById("profileCollege").value =
+        localStorage.getItem("profileCollege") || "";
+}
+
+
+// Logout
+function logout() {
+
+    sessionStorage.clear();
+
+    window.location.href = "/login";
+}
+
+
+// Page initialization
+document.addEventListener("DOMContentLoaded", function() {
+
+    loadRecords();
+
+    loadProfile();
+
+    updatePreview();
+
+});
+
+</script>
+
+</body>
+</html>

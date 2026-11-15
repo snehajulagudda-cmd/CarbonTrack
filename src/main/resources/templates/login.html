@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>CarbonTrack Login</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -18,66 +21,231 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #d4fc79, #96e6a1);
+            padding: 20px;
+
+            background: linear-gradient(
+                135deg,
+                #d4fc79,
+                #96e6a1
+            );
         }
 
         .login-box {
-            width: 350px;
+            width: 100%;
+            max-width: 390px;
             padding: 35px;
+
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px #00000020;
+            border-radius: 18px;
+
+            box-shadow: 0 10px 35px #00000020;
+
+            animation: fadeIn 0.7s ease;
+        }
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 38px;
+            margin-bottom: 8px;
         }
 
         h1 {
             text-align: center;
             color: #218838;
             margin-bottom: 10px;
+            font-size: 29px;
         }
 
         .subtitle {
             text-align: center;
             color: #666;
             margin-bottom: 25px;
+            line-height: 1.5;
+            font-size: 14px;
         }
 
         label {
             display: block;
             margin-bottom: 7px;
             font-weight: bold;
+            color: #333;
+            font-size: 14px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             margin-bottom: 18px;
+
             border: 1px solid #ccc;
-            border-radius: 7px;
+            border-radius: 8px;
+
+            font-size: 15px;
+            transition: 0.3s;
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #218838;
-            color: white;
+        input:focus {
+            outline: none;
+            border-color: #218838;
+            box-shadow: 0 0 5px #21883840;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 65px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+
+            width: auto;
+            padding: 5px;
+
+            background: transparent;
+            color: #218838;
             border: none;
-            border-radius: 7px;
-            font-size: 16px;
+
+            font-size: 12px;
+            font-weight: bold;
+
             cursor: pointer;
         }
 
-        button:hover {
+        .forgot-password {
+            display: block;
+            text-align: right;
+
+            margin-top: -10px;
+            margin-bottom: 20px;
+
+            font-size: 13px;
+            color: #218838;
+
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 13px;
+
+            background: #218838;
+            color: white;
+
+            border: none;
+            border-radius: 8px;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
             background: #176b2c;
+            transform: translateY(-2px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         #message {
             text-align: center;
             margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
         }
+
+        /* OR Divider */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin: 23px 0;
+
+            color: #888;
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        /* Google Login */
+
+        .google-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+
+            width: 100%;
+            padding: 12px;
+
+            background: white;
+            color: #333;
+
+            border: 1px solid #ccc;
+            border-radius: 8px;
+
+            font-size: 15px;
+            font-weight: bold;
+
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .google-btn:hover {
+            background: #f5f5f5;
+            border-color: #218838;
+        }
+
+        .google-icon {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4285F4;
+        }
+
+        /* Register */
 
         .register-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 23px;
+
+            color: #666;
+            font-size: 14px;
         }
 
         a {
@@ -85,110 +253,278 @@
             text-decoration: none;
             font-weight: bold;
         }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 22px;
+
+            font-size: 12px;
+            color: #888;
+        }
+
+        @media (max-width: 420px) {
+
+            .login-box {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+        }
+
     </style>
+
 </head>
 
 <body>
 
     <div class="login-box">
 
-        <h1>🌱 CarbonTrack</h1>
-        <p class="subtitle">Login to your account</p>
+        <div class="logo">🌱</div>
+
+        <h1>CarbonTrack</h1>
+
+        <p class="subtitle">
+            Welcome back!<br>
+            Login to track your carbon footprint.
+        </p>
+
+
+        <!-- Email and Password Login -->
 
         <form id="loginForm">
 
-            <label for="email">Email</label>
+            <label for="email">Email Address</label>
+
             <input
                 type="email"
                 id="email"
                 placeholder="Enter your email"
+                autocomplete="email"
                 required
             >
+
 
             <label for="password">Password</label>
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-                required
-            >
 
-            <button type="submit" id="loginBtn">Login</button>
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button
+                    type="button"
+                    class="toggle-password"
+                    id="togglePassword"
+                >
+                    Show
+                </button>
+
+            </div>
+
+
+            <!-- Forgot Password -->
+
+            <a href="/forgot-password" class="forgot-password">
+                Forgot Password?
+            </a>
+
+
+            <!-- Login Button -->
+
+            <button
+                type="submit"
+                class="login-btn"
+                id="loginBtn"
+            >
+                Login
+            </button>
 
         </form>
 
-        <p id="message" role="status"></p>
+
+        <p id="message" role="status" aria-live="polite"></p>
+
+
+        <!-- OR Divider -->
+
+        <div class="divider">
+            OR
+        </div>
+
+
+        <!-- Google Login -->
+
+        <a
+            href="/oauth2/authorization/google"
+            class="google-btn"
+        >
+            <span class="google-icon">G</span>
+            Login with Google
+        </a>
+
+
+        <!-- Create Account -->
 
         <p class="register-link">
+
             Don't have an account?
-            <a href="/register">Register</a>
+
+            <a href="/register">
+                Create Account
+            </a>
+
+        </p>
+
+
+        <p class="footer">
+            🌍 Small steps today, a greener planet tomorrow.
         </p>
 
     </div>
 
+
     <script>
+
+        // Show and Hide Password
+
+        document.getElementById("togglePassword")
+            .addEventListener("click", function() {
+
+                const passwordInput =
+                    document.getElementById("password");
+
+                const isHidden =
+                    passwordInput.type === "password";
+
+                passwordInput.type =
+                    isHidden ? "text" : "password";
+
+                this.textContent =
+                    isHidden ? "Hide" : "Show";
+
+                this.setAttribute(
+                    "aria-label",
+                    isHidden ? "Hide password" : "Show password"
+                );
+
+            });
+
+
+        // Email and Password Login
+
         document.getElementById("loginForm")
             .addEventListener("submit", async function(event) {
 
                 event.preventDefault();
 
-                const email = document.getElementById("email").value.trim();
-                const password = document.getElementById("password").value;
-                const message = document.getElementById("message");
-                const button = document.getElementById("loginBtn");
+                const email =
+                    document.getElementById("email").value.trim();
+
+                const password =
+                    document.getElementById("password").value;
+
+                const message =
+                    document.getElementById("message");
+
+                const button =
+                    document.getElementById("loginBtn");
 
                 button.disabled = true;
+
                 message.style.color = "#333";
+
                 message.textContent = "Checking login...";
 
+
                 try {
-                    const response = await fetch("/api/users/login", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            password: password
-                        })
-                    });
+
+                    const response = await fetch(
+                        "/api/users/login",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                email: email,
+                                password: password
+                            })
+                        }
+                    );
+
 
                     const data = await response.json();
 
+
                     if (response.ok) {
 
-                        // Save logged-in user's details
-                        sessionStorage.setItem("carbonUser", JSON.stringify({
-                            id: data.id,
-                            name: data.name,
-                            email: data.email
-                        }));
+                        // Save logged-in user details
+
+                        sessionStorage.setItem(
+                            "carbonUser",
+
+                            JSON.stringify({
+                                id: data.id,
+                                name: data.name,
+                                email: data.email
+                            })
+                        );
+
 
                         message.style.color = "green";
+
                         message.textContent =
                             "Login successful! Opening dashboard...";
 
+
                         setTimeout(function() {
+
                             window.location.replace("/");
+
                         }, 1000);
 
+
                     } else {
+
                         message.style.color = "red";
+
                         message.textContent =
                             data.error || "Invalid email or password.";
 
                         button.disabled = false;
+
                     }
 
+
                 } catch (error) {
+
                     message.style.color = "red";
+
                     message.textContent =
                         "Unable to connect. Please check the server.";
 
                     button.disabled = false;
+
                 }
+
             });
+
     </script>
 
 </body>
+
 </html>
